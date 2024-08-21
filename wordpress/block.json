@@ -1,6 +1,7 @@
 {
 	"title": "JSON schema for WordPress blocks",
 	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://raw.githubusercontent.com/PremiseInc/schemas/main/wordpress/block.json",
 	"definitions": {
 		"//": {
 			"reference": "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/",
@@ -10,32 +11,11 @@
 			"registerReference": "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/#example-optional"
 		}
 	},
-	"type": "object",
-	"properties": {
-		"$schema": {
-			"type": "string"
-		},
-		"apiVersion": {
-			"description": "The version of the Block API used by the block. The most recent version is 3 and it was introduced in WordPress 6.3.\n\n See the API versions documentation at https://developer.wordpress.org/block-editor/reference-guides/block-api/block-api-versions/ for more details.",
-			"type": "integer",
-			"enum": [ 1, 2, 3 ],
-			"default": 1
-		},
+	"$defs": {
 		"name": {
 			"description": "The name for a block is a unique string that identifies a block. Names have to be structured as `namespace/block-name`, where namespace is the name of your plugin or theme.",
 			"type": "string",
 			"pattern": "^[a-z][a-z0-9-]*/[a-z][a-z0-9-]*$"
-		},
-		"__experimental": {
-			"description": "The name of the experiment this block is a part of, or boolean true if there is no specific experiment name.",
-			"anyOf": [
-				{
-					"type": "string"
-				},
-				{
-					"type": "boolean"
-				}
-			]
 		},
 		"title": {
 			"description": "This is the display title for your block, which can be translated with our translation functions. The block inserter will show this name.",
@@ -95,14 +75,6 @@
 			"items": {
 				"type": "string"
 			}
-		},
-		"version": {
-			"description": "The current version number of the block, such as 1.0 or 1.0.3. It’s similar to how plugins are versioned. This field might be used with block assets to control cache invalidation, and when the block author omits it, then the installed version of WordPress is used instead.",
-			"type": "string"
-		},
-		"textdomain": {
-			"description": "The gettext text domain of the plugin/block. More information can be found in the Text Domain section of the How to Internationalize your Plugin page.\n\nhttps://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/",
-			"type": "string"
 		},
 		"attributes": {
 			"description": "Attributes provide the structured data needs of a block. They can exist in different forms when they are serialized, but they are declared together under a common interface.\n\nSee the attributes documentation at https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/ for more details.",
@@ -636,6 +608,176 @@
 					"description": "This property indicates whether the block can split when the Enter key is pressed or when blocks are pasted.",
 					"type": "boolean",
 					"default": false
+				},
+				"premise/anchorLink": {
+					"description": "Allow the block to use the Anchor Link Control; select a heading within the editor to anchor to.",
+					"oneOf": [
+						{
+							"type": "boolean",
+							"default": false
+						},
+						{
+							"type": "object",
+							"properties": {
+								"attribute": {
+									"description": "The attribute to store the resulting anchor value in.",
+									"type": "string",
+									"default": "url"
+								},
+								"overrides": {
+									"description": "Additional properties to set when selecting an anchor target.",
+									"type": "object"
+								}
+							}
+						}
+					]
+				},
+				"premise/blockLabel": {
+					"description": "The attribute to pull from when labelling the block in List View.",
+					"type": "string"
+				},
+				"premise/colorPalette": {
+					"description": "Configuration for adding a color palette control to a block.",
+					"type": "object",
+					"properties": {
+						"options": {
+							"description": "The list of colors to offer in the control.",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"color": {
+										"type": "string"
+									},
+									"isDefault": {
+										"type": "boolean"
+									}
+								},
+								"required": [ "name", "color" ]
+							}
+						},
+						"prefix": {
+							"description": "The class prefix to use for matching/applying the color selected.",
+							"type": "string"
+						}
+					}
+				},
+				"premise/extraClasses": {
+					"description": "Additional classes to add to the block when rendering.",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"premise/headingLevel": {
+					"description": "Add a heading level (h1-h6) control to a block.",
+					"oneOf": [
+						{
+							"type": "boolean",
+							"default": false
+						},
+						{
+							"description": "The attribute to save the level to.",
+							"type": "string",
+							"default": "level"
+						},
+						{
+							"type": "object",
+							"properties": {
+								"attribute": {
+									"description": "The attribute to save the level to.",
+									"type": "string",
+									"default": "level"
+								},
+								"default": {
+									"description": "The default level to use.",
+									"type": "number",
+									"default": 3
+								},
+								"control": {
+									"description": "Wether or not to render the actual control.",
+									"type": "boolean",
+									"default": true
+								}
+							}
+						}
+					]
+				},
+				"premise/locked": {
+					"description": "Hard-code block locking without user override.",
+					"oneOf": [
+						{
+							"type": "boolean",
+							"default": false
+						},
+						{
+							"type": "object",
+							"properties": {
+								"move": {
+									"description": "Wether or not to allow the block to be moved within the flow.",
+									"type": "boolean",
+									"default": true
+								},
+								"remove": {
+									"description": "Wether or not to allow the block to be removed from the editor.",
+									"type": "boolean",
+									"default": true
+								}
+							}
+						}
+					]
+				},
+				"premise/quickDuplicate": {
+					"description": "Add a Quick Add Block button to the block controls, allowing inserting of another block of the same type after it.",
+					"oneOf": [
+						{
+							"type": "boolean",
+							"default": false
+						},
+						{
+							"description": "A list of attributes that should be copied over to the new block.",
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"premise/staticUniqueId": {
+					"description": "Ensure this block has a unique (UUIDv4) ID assigned to it on creation, which will be saved to the markup/output.",
+					"oneOf": [
+						{
+							"type": "boolean",
+							"default": false
+						},
+						{
+							"type": "object",
+							"properties": {
+								"attribute": {
+									"description": "The attribute to save the ID to.",
+									"type": "string",
+									"default": "id"
+								},
+								"prefix": {
+									"description": "Optional prefix to prepend to the ID value.",
+									"type": "string"
+								}
+							}
+						}
+					]
+				},
+				"premise/titleBlock": {
+					"description": "If this block is present, it will automatically hide the Post Title in the editor. Such a block should offer it's own control for the post title.",
+					"type": "boolean",
+					"default": false
+				},
+				"premise/unwrappable": {
+					"description": "Allow this block to be Ungrouped into it's innerblocks.",
+					"type": "boolean",
+					"default": false
 				}
 			},
 			"additionalProperties": true
@@ -779,6 +921,255 @@
 				}
 			}
 		},
+		"variations": {
+			"description": "Block Variations is the API that allows a block to have similar versions of it, but all these versions share some common functionality.",
+			"oneOf": [
+				{
+					"description": "The path to a PHP file that returns an array of block variations.",
+					"type": "string"
+				},
+				{
+					"description": "An array of block variations.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"description": "The unique and machine-readable name.",
+								"type": "string"
+							},
+							"title": {
+								"description": "A human-readable variation title.",
+								"type": "string"
+							},
+							"description": {
+								"description": "A detailed variation description.",
+								"type": "string"
+							},
+							"category": {
+								"description": "A category classification, used in search interfaces to arrange block types by category.",
+								"anyOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "string",
+										"enum": [
+											"text",
+											"media",
+											"design",
+											"widgets",
+											"theme",
+											"embed"
+										]
+									}
+								]
+							},
+							"icon": {
+								"description": "An icon helping to visualize the variation. It can have the same shape as the block type.",
+								"type": "string"
+							},
+							"isDefault": {
+								"description": "Indicates whether the current variation is the default one.",
+								"type": "boolean",
+								"default": false
+							},
+							"attributes": {
+								"description": "Values that override block attributes.",
+								"type": "object"
+							},
+							"innerBlocks": {
+								"description": "Initial configuration of nested blocks.",
+								"type": "array",
+								"items": {
+									"type": "array"
+								}
+							},
+							"example": {
+								"description": "Example provides structured data for the block preview. You can set to undefined to disable the preview shown for the block type.",
+								"type": "object"
+							},
+							"scope": {
+								"description": "The list of scopes where the variation is applicable.",
+								"type": "array",
+								"items": {
+									"type": "string",
+									"enum": [ "inserter", "block", "transform" ]
+								},
+								"default": [ "inserter", "block" ]
+							},
+							"keywords": {
+								"description": "An array of terms (which can be translated) that help users discover the variation while searching.",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"isActive": {
+								"description": "The list of attributes that should be compared. Each attributes will be matched and the variation will be active if all of them are matching.",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						},
+						"required": [ "name", "title" ],
+						"additionalProperties": false
+					}
+				}
+			]
+		},
+		"blockClassName": {
+			"description": "The class name for this block, defaults to wp-[block-name]",
+			"type": "string"
+		},
+		"requirementBlockConfig": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"$ref": "#/$defs/name"
+				},
+				"title": {
+					"$ref": "#/$defs/title"
+				},
+				"category": {
+					"$ref": "#/$defs/category"
+				},
+				"parent": {
+					"$ref": "#/$defs/parent"
+				},
+				"ancestor": {
+					"$ref": "#/$defs/ancestor"
+				},
+				"allowedBlocks": {
+					"$ref": "#/$defs/allowedBlocks"
+				},
+				"icon": {
+					"$ref": "#/$defs/icon"
+				},
+				"description": {
+					"$ref": "#/$defs/description"
+				},
+				"keywords": {
+					"$ref": "#/$defs/keywords"
+				},
+				"version": {
+					"$ref": "#/$defs/version"
+				},
+				"textdomain": {
+					"$ref": "#/$defs/textdomain"
+				},
+				"attributes": {
+					"$ref": "#/$defs/attributes"
+				},
+				"providesContext": {
+					"$ref": "#/$defs/providesContext"
+				},
+				"usesContext": {
+					"$ref": "#/$defs/usesContext"
+				},
+				"supports": {
+					"$ref": "#/$defs/supports"
+				},
+				"selectors": {
+					"$ref": "#/$defs/selectors"
+				},
+				"styles": {
+					"$ref": "#/$defs/styles"
+				},
+				"example": {
+					"$ref": "#/$defs/example"
+				},
+				"variations": {
+					"$ref": "#/$defs/variations"
+				},
+				"blockClassName": {
+					"$ref": "#/$defs/blockClassName"
+				},
+				"tagName": {
+					"description": "The tag to use when rendering this simple block.",
+					"type": "string",
+					"default": "div"
+				}
+			}
+		}
+	},
+	"type": "object",
+	"properties": {
+		"$schema": {
+			"type": "string"
+		},
+		"apiVersion": {
+			"description": "The version of the Block API used by the block. The most recent version is 3 and it was introduced in WordPress 6.3.\n\n See the API versions documentation at https://developer.wordpress.org/block-editor/reference-guides/block-api/block-api-versions/ for more details.",
+			"type": "integer",
+			"enum": [ 1, 2, 3 ],
+			"default": 1
+		},
+		"name": {
+			"$ref": "#/$defs/name"
+		},
+		"__experimental": {
+			"description": "The name of the experiment this block is a part of, or boolean true if there is no specific experiment name.",
+			"anyOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "boolean"
+				}
+			]
+		},
+		"title": {
+			"$ref": "#/$defs/title"
+		},
+		"category": {
+			"$ref": "#/$defs/category"
+		},
+		"parent": {
+			"$ref": "#/$defs/parent"
+		},
+		"ancestor": {
+			"$ref": "#/$defs/ancestor"
+		},
+		"allowedBlocks": {
+			"$ref": "#/$defs/allowedBlocks"
+		},
+		"icon": {
+			"$ref": "#/$defs/icon"
+		},
+		"description": {
+			"$ref": "#/$defs/description"
+		},
+		"keywords": {
+			"$ref": "#/$defs/keywords"
+		},
+		"version": {
+			"$ref": "#/$defs/version"
+		},
+		"textdomain": {
+			"$ref": "#/$defs/textdomain"
+		},
+		"attributes": {
+			"$ref": "#/$defs/attributes"
+		},
+		"providesContext": {
+			"$ref": "#/$defs/providesContext"
+		},
+		"usesContext": {
+			"$ref": "#/$defs/usesContext"
+		},
+		"supports": {
+			"$ref": "#/$defs/supports"
+		},
+		"selectors": {
+			"$ref": "#/$defs/selectors"
+		},
+		"styles": {
+			"$ref": "#/$defs/styles"
+		},
+		"example": {
+			"$ref": "#/$defs/example"
+		},
 		"blockHooks": {
 			"description": "Block Hooks allow a block to automatically insert itself next to all instances of a given block type.\n\nSee the Block Hooks documentation at https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/#block-hooks-optional for more details.",
 			"type": "object",
@@ -889,109 +1280,29 @@
 			]
 		},
 		"variations": {
-			"description": "Block Variations is the API that allows a block to have similar versions of it, but all these versions share some common functionality.",
-			"oneOf": [
-				{
-					"description": "The path to a PHP file that returns an array of block variations.",
-					"type": "string"
+			"$ref": "#/$defs/variations"
+		},
+		"blockClassName": {
+			"$ref": "#/$defs/blockClassName"
+		},
+		"requirements": {
+			"description": "Configuration for additional, simpler blocks this block requires to function.",
+			"type": "object",
+			"properties": {
+				"parentBlock": {
+					"$ref": "#/$defs/requirementBlockConfig"
 				},
-				{
-					"description": "An array of block variations.",
+				"regionBlocks": {
 					"type": "array",
 					"items": {
-						"type": "object",
-						"properties": {
-							"name": {
-								"description": "The unique and machine-readable name.",
-								"type": "string"
-							},
-							"title": {
-								"description": "A human-readable variation title.",
-								"type": "string"
-							},
-							"description": {
-								"description": "A detailed variation description.",
-								"type": "string"
-							},
-							"category": {
-								"description": "A category classification, used in search interfaces to arrange block types by category.",
-								"anyOf": [
-									{
-										"type": "string"
-									},
-									{
-										"type": "string",
-										"enum": [
-											"text",
-											"media",
-											"design",
-											"widgets",
-											"theme",
-											"embed"
-										]
-									}
-								]
-							},
-							"icon": {
-								"description": "An icon helping to visualize the variation. It can have the same shape as the block type.",
-								"type": "string"
-							},
-							"isDefault": {
-								"description": "Indicates whether the current variation is the default one.",
-								"type": "boolean",
-								"default": false
-							},
-							"attributes": {
-								"description": "Values that override block attributes.",
-								"type": "object"
-							},
-							"innerBlocks": {
-								"description": "Initial configuration of nested blocks.",
-								"type": "array",
-								"items": {
-									"type": "array"
-								}
-							},
-							"example": {
-								"description": "Example provides structured data for the block preview. You can set to undefined to disable the preview shown for the block type.",
-								"type": "object"
-							},
-							"scope": {
-								"description": "The list of scopes where the variation is applicable.",
-								"type": "array",
-								"items": {
-									"type": "string",
-									"enum": [ "inserter", "block", "transform" ]
-								},
-								"default": [ "inserter", "block" ]
-							},
-							"keywords": {
-								"description": "An array of terms (which can be translated) that help users discover the variation while searching.",
-								"type": "array",
-								"items": {
-									"type": "string"
-								}
-							},
-							"isActive": {
-								"description": "The list of attributes that should be compared. Each attributes will be matched and the variation will be active if all of them are matching.",
-								"type": "array",
-								"items": {
-									"type": "string"
-								}
-							}
-						},
-						"required": [ "name", "title" ],
-						"additionalProperties": false
+						"$ref": "#/$defs/requirementBlockConfig"
 					}
 				}
-			]
+			},
+			"additionalProperties": false
 		},
 		"render": {
 			"description": "Template file loaded on the server when rendering a block.",
-			"type": "string"
-		},
-		"blockClassName": {
-			"description": "The class name for this block, defaults to wp-[block-name]",
 			"type": "string"
 		}
 	},
