@@ -1167,7 +1167,8 @@
 			"$ref": "#/$defs/version"
 		},
 		"textdomain": {
-			"$ref": "#/$defs/textdomain"
+			"description": "The gettext text domain of the plugin/block. More information can be found in the Text Domain section of the How to Internationalize your Plugin page.\n\nhttps://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/",
+			"type": "string"
 		},
 		"attributes": {
 			"$ref": "#/$defs/attributes"
