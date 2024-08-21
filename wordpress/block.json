@@ -1090,6 +1090,26 @@
 					"description": "The tag to use when rendering this simple block.",
 					"type": "string",
 					"default": "div"
+				},
+				"template": {
+					"description": "Initial configuration of nested blocks.",
+					"type": "array",
+					"items": {
+						"type": "array"
+					}
+				},
+				"templateLock": {
+					"description": "Template locking used for the nested blocks.",
+					"oneOf": [
+						{
+							"type": "string",
+							"enum": [ "contentOnly", "all", "insert" ]
+						},
+						{
+							"type": "boolean",
+							"enum": [ false ]
+						}
+					]
 				}
 			}
 		}
