@@ -984,16 +984,16 @@
 						"additionalProperties": false
 					}
 				}
-			],
+			]
 		},
 		"render": {
 			"description": "Template file loaded on the server when rendering a block.",
 			"type": "string"
 		},
-    "blockClassName": {
-      "description": "The class name for this block, defaults to wp-[block-name]",
-      "type": "string"
-    }
+		"blockClassName": {
+			"description": "The class name for this block, defaults to wp-[block-name]",
+			"type": "string"
+		}
 	},
 	"required": [ "name", "title" ],
 	"additionalProperties": false
