@@ -1011,6 +1011,13 @@
 								"items": {
 									"type": "string"
 								}
+							},
+							"postTypes": {
+								"description": "A list of post types this variation is available to.",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
 							}
 						},
 						"required": [ "name", "title" ],
