@@ -1030,6 +1030,31 @@
 			"description": "The class name for this block, defaults to wp-[block-name]",
 			"type": "string"
 		},
+		"tagName": {
+			"description": "(Simple Wrapper Blocks) The tag name to use.",
+			"type": "string",
+			"default": "div"
+		},
+		"template": {
+			"description": "(Simple Wrapper Blocks) The default inner blocks to use.",
+			"type": "array",
+			"items": {
+				"type": "array"
+			}
+		},
+		"templateLock": {
+			"description": "(Simple Wrapper Blocks) Template locking for inner blocks",
+			"oneOf": [
+				{
+					"type": "string",
+					"enum": [ "contentOnly", "all", "insert" ]
+				},
+				{
+					"type": "boolean",
+					"enum": [ false ]
+				}
+			]
+		},
 		"requirementBlockConfig": {
 			"type": "object",
 			"properties": {
@@ -1088,29 +1113,13 @@
 					"$ref": "#/$defs/blockClassName"
 				},
 				"tagName": {
-					"description": "The tag to use when rendering this simple block.",
-					"type": "string",
-					"default": "div"
+					"$ref": "#/$defs/tagName"
 				},
 				"template": {
-					"description": "Initial configuration of nested blocks.",
-					"type": "array",
-					"items": {
-						"type": "array"
-					}
+					"$ref": "#/$defs/template"
 				},
 				"templateLock": {
-					"description": "Template locking used for the nested blocks.",
-					"oneOf": [
-						{
-							"type": "string",
-							"enum": [ "contentOnly", "all", "insert" ]
-						},
-						{
-							"type": "boolean",
-							"enum": [ false ]
-						}
-					]
+					"$ref": "#/$defs/templateLock"
 				}
 			}
 		}
@@ -1307,6 +1316,15 @@
 		},
 		"blockClassName": {
 			"$ref": "#/$defs/blockClassName"
+		},
+		"tagName": {
+			"$ref": "#/$defs/tagName"
+		},
+		"template": {
+			"$ref": "#/$defs/template"
+		},
+		"templateLock": {
+			"$ref": "#/$defs/templateLock"
 		},
 		"requirements": {
 			"description": "Configuration for additional, simpler blocks this block requires to function.",
