@@ -132,12 +132,16 @@
 							"description": "Attribute sources are used to define how the attribute values are extracted from saved post content. They provide a mechanism to map from the saved markup to a JavaScript representation of a block.",
 							"type": "string",
 							"enum": [
+								"raw",
 								"attribute",
+								"property",
+								"html",
 								"text",
 								"rich-text",
-								"html",
-								"raw",
+								"children",
+								"node",
 								"query",
+								"tag",
 								"meta"
 							]
 						},
