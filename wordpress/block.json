@@ -774,7 +774,7 @@
 					]
 				},
 				"premise/titleBlock": {
-					"description": "If this block is present, it will automatically hide the Post Title in the editor. Such a block should offer it's own control for the post title.",
+					"description": "This block controls or otherwise handles rendering of the post title. Defaults to hiding the title editor. The block should provide a control for the post title.",
 					"oneOf": [
 						{
 							"type": "boolean",
