@@ -775,8 +775,18 @@
 				},
 				"premise/titleBlock": {
 					"description": "If this block is present, it will automatically hide the Post Title in the editor. Such a block should offer it's own control for the post title.",
-					"type": "boolean",
-					"default": false
+					"oneOf": [
+						{
+							"type": "boolean",
+							"default": false
+						},
+						{
+							"type": "object",
+							"properties": {
+								"hideTitleEditor": { "type": "boolean" }
+							}
+						}
+					]
 				},
 				"premise/unwrappable": {
 					"description": "Allow this block to be Ungrouped into it's innerblocks.",
